@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Podcasts</title>
+    <link rel="icon" href="{{ url_for('static', filename='tablogo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chicle&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    {% include 'navbar.html' %}
+
+    <div id="container">
+        <div id="filter">
+            <h2>Filter By One Selection</h2>
+            <h2>Title</h2>
+            <form action="{{ url_for('podcasts_bp.podcasts') }}" method="GET">
+                <select name="title" onchange="this.form.submit()">
+                    <option value="">All Titles</option>
+                    {% for podcast in unique_podcasts %}
+                        <option value="{{ podcast.id }}" {% if request.args.get('title') == podcast.id|string %}selected{% endif %}>{{ podcast.title }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+            <h2>Categories</h2>
+            <form action="{{ url_for('podcasts_bp.podcasts') }}" method="GET">
+                <select name="category" onchange="this.form.submit()">
+                    <option value="">All Categories</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if request.args.get('category') == category.id|string %}selected{% endif %}>{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+            <h2>Authors</h2>
+            <form action="{{ url_for('podcasts_bp.podcasts') }}" method="GET">
+                <select name="author" onchange="this.form.submit()">
+                    <option value="">All Authors</option>
+                    {% for author in authors %}
+                        <option value="{{ author.id }}" {% if request.args.get('author') == author.id|string %}selected{% endif %}>{{ author.name }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+
+        <main id="main">
+            <div class="catalogue-grid">
+                {% if no_podcasts_found %}
+                        <p style="margin:auto; font-family: Chicle, serif; font-size: 35px;">No podcasts available matching your search criteria.</p>
+                {% endif %}
+                {% if podcasts %}
+                    {% for podcast in podcasts %}
+                        <div class="catalogue-container-item">
+                            <a href="{{ url_for('description_bp.description', podcast_id=podcast.id, catalogue_page=page, search_title=request.args.get('search_title'), category=request.args.get('category'), author=request.args.get('author'), title=request.args.get('title')) }}" class="catalogue-item">
+                                <img src="{{ podcast.image }}" alt="{{ podcast.title }}" class="catalogue-image">
+                                <h3 class="catalogue-title"><span>{{ podcast.title }}</span></h3>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="pagination">
+                    {% if page > 1 %}
+                        <a href="{{ url_for('podcasts_bp.podcasts', page=page-1, search_title=request.args.get('search_title'), category=request.args.get('category'), author=request.args.get('author'), title=request.args.get('title')) }}">&laquo; Back</a>
+                    {% endif %}
+                    <span>Page {{ page }} of {{ total_pages }}</span>
+                    {% if page < total_pages %}
+                        <a href="{{ url_for('podcasts_bp.podcasts', page=page+1, search_title=request.args.get('search_title'), category=request.args.get('category'), author=request.args.get('author'), title=request.args.get('title')) }}">Next &raquo;</a>
+                    {% endif %}
+                </div>
+            {%endif%}
+        </main>
+    </div>
+
+    <footer>
+        <div class="copyright">&copy; ldun202 | eand640 | shar672 </div>
+    </footer>
+</body>
+</html>

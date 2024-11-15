@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account & Playlist</title>
+    <link rel="icon" href="{{url_for('static', filename='tablogo.png')}}">
+    <link rel="stylesheet" href="../static/css/main.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chicle&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <a href="{{url_for('authentication_bp.logout')}}" class="floating-button">Logout</a>
+
+    <div id="container">
+        <main id="main">
+            <div class="description-top">
+                <h2 class="podcast-title">{{ playlist.user.username }}'s Playlist</h2>
+            </div>
+
+            <div class="content-container">
+                <div class="description">
+                    <div class="description-top-slice">
+                        <div class="description-inner">
+                            <div class="about">
+                                <p><span class="description-title">Title:<br></span>{{ playlist.title }}</p>
+                                <p><span class="description-title">Author:<br></span>{{ playlist.user.username }}</p>
+                            </div>
+                        </div>
+                        <div class="description-text">
+                            <p><span class="description-title">Description<br></span>{{ playlist.description }}</p>
+                        </div>
+                    </div>
+
+                    <div class="description-bottom-slice">
+                        <div class="episodes">
+                            <h3>Podcasts:</h3>
+                            {% if podcasts %}
+                                {% for podcast in podcasts %}
+                                    <div class="episode">
+                                        <div class="episode-header">
+                                            <strong style="font-size: 15px;">{{ podcast.title }}</strong>
+                                            <div class="remove-from-playlist-action">
+                                                <form action="{{ url_for('account_bp.delete_podcast_action', podcast_id=podcast.id) }}" method="post">
+                                                    <input type="hidden" name="page_ep" value="{{ page }}">
+                                                    <input type="hidden" name="page_pod" value="{{ page_pod }}">
+                                                    <input type="hidden" name="total_podcasts" value="{{ total_podcasts }}">
+                                                    <input type="hidden" name="per_page_pod" value="{{ per_page_pod }}">
+                                                    <input type="hidden" name="username" value="{{ username }}">
+                                                    <button type="submit" class="remove-btn">Remove</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="episode-info">
+                                            <p><span class="episode-title">Link to Podcast:</span><a href="{{ url_for('description_bp.description', podcast_id=podcast.id, catalogue_page=cat_page, search_title=request.args.get('search_title'), category=request.args.get('category'), author=request.args.get('author'), title=request.args.get('title')) }}" target="_blank">Listen to Podcast here!</a></p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                <div class="pagination">
+                                    {% if page_pod > 1 %}
+                                        <a href="{{ url_for('account_bp.account', username=username, page=page, page_pod=page_pod-1) }}">&laquo; Previous</a>
+                                    {% endif %}
+                                    <span>Page {{ page_pod }} of {{ total_pages_pod }}</span>
+                                    {% if page_pod < total_pages_pod %}
+                                        <a href="{{ url_for('account_bp.account', username=username, page=page, page_pod=page_pod+1) }}">Next &raquo;</a>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <p style="padding-bottom: 30%;">No podcasts available.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="episodes">
+                    <h3>Episodes:</h3>
+                    {% if episodes %}
+                        {% for episode in episodes %}
+                            <div class="episode">
+                                <div class="episode-header">
+                                    <strong style="font-size: 15px;">{{ episode.title }}</strong>
+                                    <div class="remove-from-playlist-action">
+                                        <form action="{{ url_for('account_bp.delete_episode_action', episode_id=episode.id) }}" method="post">
+                                            <input type="hidden" name="page_ep" value="{{ page }}">
+                                            <input type="hidden" name="page_pod" value="{{ page_pod }}">
+                                            <input type="hidden" name="total_episodes" value="{{ total_episodes }}">
+                                            <input type="hidden" name="per_page_ep" value="{{ per_page_ep }}">
+                                            <input type="hidden" name="username" value="{{ username }}">
+                                            <button type="submit" class="remove-btn">Remove</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="episode-info">
+                                    <p><span class="episode-title">Length:</span> {{ episode.audio_length }} mins </p>
+                                    <p><span class="episode-title">Published on:</span> {{ episode.publication_date }}</p>
+                                    <p><span class="episode-title">Audio Link:</span>
+                                    <a href="{{ episode.audio_link }}" target="_blank">Listen here</a></p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div class="pagination">
+                            {% if page > 1 %}
+                                <a href="{{ url_for('account_bp.account', username=username, page=page-1, page_pod=page_pod) }}">&laquo; Previous</a>
+                            {% endif %}
+                            <span>Page {{ page }} of {{ total_pages }}</span>
+                            {% if page < total_pages %}
+                                <a href="{{ url_for('account_bp.account', username=username, page=page+1, page_pod=page_pod) }}">Next &raquo;</a>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <p style="padding-bottom: 30%;">No episodes available.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="review-container">
+                <div class="review_section">
+                    <div class="review-header">
+                        <h2>My Reviews:</h2>
+                    </div>
+                    <div class="reviews-list">
+                        {% if reviews %}
+                            {% for review in reviews %}
+                                <div class="review-card">
+                                    <p><strong>{{ review.podcast.title }}</strong></p>
+                                    <p>Comment: {{ review.comment }}</p>
+                                    <p><em>Rating: {{ review.rating }}</em></p>
+                                </div>
+                            {% endfor %}
+                            <p class="review-sorted-by">(Sorted by oldest first)</p>
+                        {% else %}
+                            <p>No reviews found.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <div class="copyright">&copy; ldun202 | eand640 | shar672 </div>
+    </footer>
+</body>
+</html>

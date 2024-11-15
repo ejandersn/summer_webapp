@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="icon" href="{{ url_for('static', filename='tablogo.png') }}">
+    <link rel="stylesheet" href="../static/css/main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chicle&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    {% include 'navbar.html' %}
+    <div class="homepage-description center-content">
+        <h4 class="homepage-description-title">
+            {% if 'username' in session %}
+            {{ session['username'] }},
+            {% endif %}
+            Welcome to the BeanPod!</h4>
+        <div class="homepage-description-text">
+            <p>A catalogue for all your favourite podcasts! Find the classics, or find something new...</p>
+            <p>Coming soon: sort by category, author, and more.</p>
+        </div>
+    </div>
+
+<!--    <div id="container">-->
+<!--        <main id="main">-->
+            <div class="chart-group">
+                <div class="chart-item">
+                    <h1 class="chart-title">Trending Now</h1>
+                    <ol class="a">
+                        {% for podcast in charts[0].podcasts %}
+                        <li class="chart-list-item">
+                            <a href="{{ url_for('description_bp.description', podcast_id=podcast.id) }}" class="chart-text">
+                                <img src="{{ podcast.image }}" alt="{{ podcast.title }}" class="chart-image">
+                                <span class="chart-podcast-title">{{ podcast.title }}</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                </div>
+                <div class="chart-item">
+                    <h1 class="chart-title">Editors Picks</h1>
+                    <ol class="b">
+                        {% for podcast in charts[1].podcasts %}
+                        <li class="chart-list-item">
+                            <a href="{{ url_for('description_bp.description', podcast_id=podcast.id) }}" class="chart-text">
+                                <img src="{{ podcast.image }}" alt="{{ podcast.title }}" class="chart-image">
+                                <span class="chart-podcast-title">{{ podcast.title }}</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <div class="copyright">&copy; ldun202 | eand640 | shar672</div>
+    </footer>
+</body>
+</html>

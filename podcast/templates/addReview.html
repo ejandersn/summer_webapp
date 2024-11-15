@@ -1,0 +1,44 @@
+<!--need to tidy this up and make it look nicer-->
+{% extends "podcastDescription.html" %}
+{% block reviews %}
+    {% if error_message %}
+    <div class="error-message">{{ error_message }}</div>
+    {% endif %}
+    <div class="form">
+        <form method="POST" action="{{ url_for('description_bp.new_review', podcast_id=podcast_id) }}">
+            {{ form.csrf_token }}
+            <div class="form-field">
+                <label>{{ form.comment.label }}</label>
+                {{ form.comment }}
+                {% if form.comment.errors or comment_error_message is not none %}
+                <ul class="errors">
+                    {% if comment_error_message is not none %}
+                    <ul>{{ comment_error_message }}</ul>
+                    {% endif %}
+                    {% for error in form.comment.errors %}
+                    <ul>{{ error }}</ul>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            <div class="form-field">
+                <label>{{ form.rating.label }}</label>
+                {{ form.rating }}
+                {% if form.rating.errors or rating_error_message is not none %}
+                <ul class="errors">
+                    {% if rating_error_message is not none %}
+                    <ul>{{ rating_error_message }}</ul>
+                    {% endif %}
+                    {% for error in form.rating.errors %}
+                    <ul>{{ error }}</ul>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            <div class="submit-btn">
+                {{ form.submit }}
+            </div>
+        </form>
+    </div>
+
+{% endblock reviews %}

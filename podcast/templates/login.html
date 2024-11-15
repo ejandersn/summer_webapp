@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="icon" href="{{url_for('static', filename='tablogo.png')}}">
+    <link rel="stylesheet" href="../static/css/main.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chicle&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    {% include 'navbar.html'%}
+
+    {% block content %}
+    <main id="main-login">
+        <div class="centered-form ">
+            <h1 class="title">{{ title }}</h1>
+            <form method="POST" action="{{ url_for('authentication_bp.login') }}">
+                 {{ form.csrf_token }} <!-- Need to include this token - Flask WTForms requires it. -->
+                <div class="redirect_message">
+                    {% if redirect_message is not none %}
+                    {{ redirect_message }}
+                    {% endif %}
+                </div>
+                <h2 style="font-family: Chicle, serif; color: #A7CEA4;font-size: 35px;">Log In</h2>
+                <div class="form-field">{{ form.username.label }} {{ form.username }}
+                    {% if form.username.errors or username_error_message is not none %}
+                        <ul class="errors">
+                            {% if username_error_message is not none %}
+                                <ul>
+                                    {{ username_error_message }}
+                                    <a href="{{ url_for('authentication_bp.register') }}" style="font-size: large; color:#847996">or Register Here</a>
+                                </ul>
+                            {% endif %}
+                            {% for error in form.username.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-field">{{ form.password.label }} {{ form.password }}
+                    {% if form.password.errors or password_error_message is not none %}
+                        <ul class="errors">
+                            {% if password_error_message is not none %}
+                                <ul>
+                                    {{ password_error_message }}
+                                </ul>
+                            {% endif %}
+                            {% for error in form.password.errors %}
+                                <ul>{{ error }}</ul>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                <div class="submit-btn", style="margin-top: 10px;">
+                {{ form.submit }}
+                </div>
+            </form>
+            <a href="{{ url_for('authentication_bp.register') }}">No account? Register here</a>
+        </div>
+    </main>
+    {% endblock %}
+</body>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Description</title>
+    <link rel="icon" href="{{ url_for('static', filename='tablogo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chicle&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div id="container">
+        <main id="main">
+            <div class="description-top">
+                <a href="{{ url_for('podcasts_bp.podcasts', page=catalogue_page, search_title=search_title, category=category_id, author=author_id, title=title_id) }}" class="back-link">Back to Catalogue</a>
+                <h2 class="podcast-title">{{ podcast.title }}</h2>
+            </div>
+            <div class="content-container">
+                <div class="description">
+                    <div class="description-inner">
+                        <img src="{{ podcast.image }}" alt="{{ podcast.title }}">
+                        <div class="about">
+                            <p><span class="description-title">Author:<br></span> {{ podcast.author.name }}</p>
+                            <p><span class="description-title">Language:<br></span> {{ podcast.language }}</p>
+                        </div>
+                    </div>
+                    <div class="description-text">
+                        <p><span class="description-title">About:<br></span> {{ podcast.description }}</p>
+                        <p><span class="description-title">Categories:<br></span>
+                        {% for category in podcast.categories %}
+                            {{ category.name }}<br>
+                        {% endfor %}
+                        </p>
+                        <p><span class="description-title">Website:<br></span> {{ podcast.website }}</p>
+                        <p><span class="description-title">Average Rating:<br></span> {{ av_rating }}</p>
+                        <p><span class="description-title">iTunes ID:<br></span> {{ podcast.itunes_id }}</p>
+                        <div class="add-to-playlist-action">
+                           {% if recently_added_podcast == podcast.id %}
+                               <form>
+                                   <input type="hidden" name="user_id" value="{{ user_id }}">
+                                   <button type="submit" class="add-btn">Added!</button>
+                               </form>
+                           {% else %}
+                               <form action="{{ url_for('description_bp.perform_podcast_action', podcast_id=podcast.id) }}" method="post">
+                                   <input type="hidden" name="user_id" value="{{ user_id }}">
+                                   <button type="submit" class="add-btn">Add Podcast to Playlist</button>
+                               </form>
+                           {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="episodes">
+                    <h3>Episodes:</h3>
+                    {% if episodes %}
+                        {% for episode in episodes %}
+                       <div class="episode">
+                            <div class="episode-header">
+                                <strong style="font-size: 15px;">{{ episode.title }}</strong>
+                                <div class="add-to-playlist-action">
+                                    {% if recently_added_episode == episode.id %}
+                                        <form>
+                                            <input type="hidden" name="user_id" value="{{ user_id }}">
+                                            <button type="submit" class="add-btn">Added!</button>
+                                        </form>
+                                    {% else %}
+                                        <form action="{{ url_for('description_bp.perform_episode_action', episode_id=episode.id) }}" method="post">
+                                            <input type="hidden" name="user_id" value="{{ user_id }}">
+                                            <button type="submit" class="add-btn">Add to Playlist</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="episode-info">
+                                <p><span class="episode-title">Length:</span> {{ episode.audio_length }} mins </p>
+                                <p><span class="episode-title">Published on:</span> {{ episode.publication_date }}</p>
+                                <p><span class="episode-title">Audio Link:</span>
+                                <a href="{{ episode.audio_link }}" target="_blank">Listen here</a></p>
+                            </div>
+                        </div>
+
+                        {% endfor %}
+                        <div class="pagination">
+                            {% if page > 1 %}
+                                <a href="{{ url_for('description_bp.description',
+                                                     podcast_id=podcast.id,
+                                                     page=page-1,
+                                                     catalogue_page=catalogue_page,
+                                                     search_title=search_title,
+                                                     category=category_id,
+                                                     author=author_id) }}">&laquo; Previous</a>
+                            {% endif %}
+                            <span>Page {{ page }} of {{ total_pages }}</span>
+                            {% if page < total_pages %}
+                                <a href="{{ url_for('description_bp.description',
+                                                     podcast_id=podcast.id,
+                                                     page=page+1,
+                                                     catalogue_page=catalogue_page,
+                                                     search_title=search_title,
+                                                     category=category_id,
+                                                     author=author_id) }}">Next &raquo;</a>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <p style="padding-bottom: 30%;">No episodes available.</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="review-container">
+    {% block reviews %}
+    <div class="review_section">
+        <div class="review-header">
+            <h2>Reviews:</h2>
+            <form action="{{ url_for('description_bp.new_review', podcast_id=podcast.id) }}" method="get">
+                <button class="add-btn" type="submit">Add New Review</button>
+            </form>
+        </div>
+        <div class="reviews-list">
+            {% for review in reviews %}
+            <div class="review-card">
+                <p><strong>{{ review.user.username }}</strong></p>
+                <p>Comment: {{ review.comment }}</p>
+                <p><em>Rating: {{ review.rating }}</em></p>
+            </div>
+            {% endfor %}
+            <p class="review-sorted-by">(Sorted by oldest first)</p>
+        </div>
+    </div>
+    {% endblock reviews %}
+</div>
+
+
+
+        </main>
+    </div>
+    <footer>
+        <div class="copyright">&copy; ldun202 | eand640 | shar672 </div>
+    </footer>
+</body>
+</html>
