@@ -1,0 +1,101 @@
+/*// <uniquifier>: Use a unique and descriptive class name*/
+/*// <weight>: Use a value from 400 to 700*/
+
+.dynapuff-font {
+  font-family: "DynaPuff", system-ui;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+
+
+html, body{
+    background-color: #150C1D;
+    height: 100%;
+}
+
+a, p, h1, h2, h3, h4, title{
+    color: #F5F5F5;
+    font-family: "DynaPuff", system-ui;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    font-variation-settings:
+            "wdth" 100;
+
+}
+
+/* Floating nav bar that overlays the page on the left */
+#header {
+    position: fixed; /* Keeps the nav bar fixed in place */
+    top: 40vh; /* Align to the top of the viewport */
+    left: 0; /* Align to the left of the viewport */
+    width: 20%; /* Set the width of the nav bar */
+    height: 60vh; /* Full height of the viewport */
+    background: rgba(248, 247, 247, 0.95); /* Slight transparency to give a hovering effect */
+    box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+    z-index: 9999; /* Ensure it layers above the rest of the content */
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack items vertically */
+    justify-content: flex-start; /* Align items at the top */
+    align-items: flex-start; /* Align items to the left inside the nav bar */
+    padding: 10px; /* Add padding for spacing */
+    font-family: "Chicle", serif;
+    color: #A7CEA4;
+    overflow-y: auto; /* Enable scrolling if the content overflows */
+    box-sizing: border-box; /* Include padding and border in dimensions */
+    border-radius: 30px;
+}
+
+/* Styling for the links inside the header */
+#header .header-right a {
+    display: block; /* Each link takes a full line */
+    margin-bottom: 10px; /* Add space between links */
+    color: #A7CEA4; /* Match the text color */
+    text-decoration: none; /* Remove underline */
+    font-size: 1.2em; /* Increase font size */
+    padding: 5px 10px; /* Add padding for better clickability */
+    transition: background 0.3s; /* Smooth hover effect */
+}
+
+#header .header-right a:hover {
+    background: #d7d6d6; /* Change background on hover */
+    color: #150C1D; /* Change text color on hover */
+    border-radius: 5px; /* Round the corners slightly */
+}
+
+/* Ensure the search form fits nicely */
+#header .search {
+    margin-top: 20px; /* Space between links and search bar */
+    width: 100%; /* Ensure it stretches the width of the nav bar */
+}
+
+#header .search input {
+    width: calc(100% - 50px); /* Adjust width to leave space for the button */
+    padding: 5px;
+    font-size: 1em;
+    margin-right: 5px;
+}
+
+#header .search button {
+    padding: 5px 10px;
+    font-size: 1em;
+    background: #A7CEA4;
+    color: #150C1D;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#header .search button:hover {
+    background: #d7d6d6;
+}
+
+/* Add spacing for the header title */
+.header-title {
+    margin-bottom: 20px; /* Add space below the title */
+    text-align: left; /* Align title to the left */
+    width: 100%; /* Stretch across the width of the nav bar */
+}
